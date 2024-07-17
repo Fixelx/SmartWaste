@@ -7,7 +7,7 @@ User=root
 Group=root
 WorkingDirectory=/home/SmartWaste/project
 Environment="PYTHONPATH=/home/SmartWaste/project/env/lib/python3.11/site-packages"
-ExecStart=/home/SmartWaste/project/env/bin/gunicorn --workers 3 --bind 10.4.65.53:8000 --access-logfile /home/SmartWaste/project/log/gunicorn/access.log --error-logfile /home/SmartWaste/project/log/gunicorn/error.log app:app
+ExecStart=/home/SmartWaste/project/env/bin/gunicorn --workers 3 --bind 192.168.1.31:8000 --access-logfile /home/SmartWaste/project/log/gunicorn/access.log --error-logfile /home/SmartWaste/project/log/gunicorn/error.log app:app
 
 # Restart policies
 Restart=always

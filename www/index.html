@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartWaste Dashboard</title>
+    <style>
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SmartWaste Dashboard</h1>
+    
+    <!-- LED Steuerung -->
+    <h2>LED Steuerung</h2>
+    <button class="btn" onclick="fetch('/led/on')">LED einschalten</button>
+    <button class="btn" onclick="fetch('/led/off')">LED ausschalten</button>
+    <p id="ledStatus"></p>
+
+    <!-- Analysieren starten -->
+    <h2>Analysieren starten</h2>
+    <button class="btn" onclick="startAnalyse()">Start Analyse</button>
+    <p id="analyseStatus"></p>
+
+    <script>
+        function startAnalyse() {
+            fetch('/start')
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('analyseStatus').textContent = 'Analyse erfolgreich gestartet: ' + response.text();
+                    } else {
+                        document.getElementById('analyseStatus').textContent = 'Fehler beim Starten der Analyse.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('analyseStatus').textContent = 'Fehler beim Starten der Analyse.';
+                });
+        }
+    </script>
+</body>
+</html>

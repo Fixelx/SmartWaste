@@ -5,9 +5,14 @@ After=network.target
 [Service]
 User=root
 Group=root
-WorkingDirectory=/home/SmartWaste/project
-Environment="PYTHONPATH=/home/SmartWaste/project/env/lib/python3.11/site-packages"
-ExecStart=/home/SmartWaste/project/env/bin/gunicorn --workers 3 --bind 192.168.1.31:8000 --access-logfile /home/SmartWaste/project/log/gunicorn/access.log --error-logfile /home/SmartWaste/project/log/gunicorn/error.log app:app
+# Setze das WorkingDirectory basierend auf dem Installationspfad
+Environment="INSTALL_PATH=/home/SmartWaste/project"
+WorkingDirectory=${INSTALL_PATH}
+Environment="PYTHONPATH=${INSTALL_PATH}/env/lib/python3.11/site-packages"
+Environment="GUNICORN_BIN_PATH=${INSTALL_PATH}/env/bin/gunicorn"
+Environment="ACCESS_LOG_PATH=${INSTALL_PATH}/log/gunicorn/access.log"
+Environment="ERROR_LOG_PATH=${INSTALL_PATH}/log/gunicorn/error.log"
+ExecStart=${GUNICORN_BIN_PATH} --workers 3 --bind 192.168.1.31:8000 --access-logfile ${ACCESS_LOG_PATH} --error-logfile ${ERROR_LOG_PATH} app:app
 
 # Restart policies
 Restart=always

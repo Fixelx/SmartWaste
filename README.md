@@ -1,7 +1,1 @@
-IP Adresse anpassen in:
-- wsgi.py
-- /temp/smartwaste
-- /temp/gunicorn.service
-
-Zuhause: 192.168.1.31
-Office: 10.4.65.53
+Zum installieren: curl -s https://github.com/Fixelx/SmartWaste/edit/main/setup.sh | bash

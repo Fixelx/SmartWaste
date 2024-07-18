@@ -33,40 +33,44 @@ print_info() {
 ################################################################################################
 ################################################################################################
 # OPTIONAL Netzwerkkonfiguration
-# Benutzer fragen, ob die IP-Adresse auf statisch gesetzt werden soll
-read -p "Möchten Sie die IP-Adresse auf statisch setzen? (ja/nein): " set_static_ip
-current_ip=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-
-if [[ "$set_static_ip" =~ ^[Jj]$|^[Jj]a$ ]]; then
+get_network_info() {
+    current_ip=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
     current_netmask=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+\.\d+\.\d+\.\d+/\d+' | cut -d '/' -f 2)
     current_gateway=$(ip route | grep default | awk '{print $3}')
     current_nameserver=$(nmcli dev show eth0 | grep 'IP4.DNS' | awk '{print $2}')
+}
 
-    # Netzmaske in punktierter Dezimalnotation umwandeln
+netmask_to_dot() {
     IFS=. read -r i1 i2 i3 i4 <<< "$(ipcalc -m $current_ip/$current_netmask | cut -d= -f2)"
-    current_netmask="$i1.$i2.$i3.$i4"
+    echo "$i1.$i2.$i3.$i4"
+}
 
-    # Statische IP-Konfiguration erstellen
+read -p "Möchten Sie die IP-Adresse auf statisch setzen? (ja/nein): " set_static_ip
+
+get_network_info
+
+if [[ "$set_static_ip" =~ ^[Jj]$|^[Jj]a$ ]]; then
+    current_netmask=$(netmask_to_dot)
+    
     static_ip_config="
-    auto eth0
-    iface eth0 inet static
-        address $current_ip
-        netmask $current_netmask
-        gateway $current_gateway
-        dns-nameservers $current_nameserver 8.8.8.8
-    "
-
-    # Konfiguration sichern und aktualisieren
+auto eth0
+iface eth0 inet static
+    address $current_ip
+    netmask $current_netmask
+    gateway $current_gateway
+    dns-nameservers $current_nameserver 8.8.8.8
+"
     {
         sudo cp /etc/network/interfaces /etc/network/interfaces.backup
         echo "$static_ip_config" | sudo tee /etc/network/interfaces > /dev/null
-        print_success "Netzwerkkonfiguration erfolgreich"
+        sudo systemctl restart networking
+        print_success "Netzwerkkonfiguration erfolgreich aktualisiert."
     } || {
-        print_error "Fehler beim Setzen der IP aufgetreten"
+        print_error "Fehler beim Setzen der IP aufgetreten."
         exit 1
     }
 else
-    print_info "Netzwerkkonfiguration wurde übersprungen."
+    print_info "Die Netzwerkkonfiguration wurde übersprungen."
 fi
 ################################################################################################
 ################################################################################################

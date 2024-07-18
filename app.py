@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from module.picture import *
 import RPi.GPIO as GPIO  # Falls GPIO benötigt wird
 
-app = Flask(__name__, template_folder='/home/SmartWaste/project/www')
+app = Flask(__name__, template_folder='www/')
 
 # GPIO Setup (falls benötigt)
 LED_PIN = 17

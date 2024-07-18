@@ -7,7 +7,7 @@ User=root
 Group=root
 
 # Installationspfad definieren
-Environment="INSTALL_PATH=/home/SmartWaste/project"
+Environment="INSTALL_PATH=/home/Felix/smartwaste"
 
 # Verwendung der Installationspfad-Variable
 WorkingDirectory=${INSTALL_PATH}

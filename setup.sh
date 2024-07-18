@@ -105,22 +105,6 @@ fi
 }
 
 
-# Berechtigungen anpassen
-{ # try
-    if grep -q "^smartwaste_dev:" /etc/group; then
-        print_info "Die Gruppe 'smartwaste_dev' existiert bereits."
-    else
-        sudo groupadd smartwaste_dev
-    fi
-    sudo chmod -R 774 "$directory_name"
-    sudo chown -R root:smartwaste_dev "$directory_name"
-    print_success "Berechtigungen erfolgreich angepasst"
-} || { # catch
-    print_error "Fehler beim Setzen der Berechtigungen aufgetreten"
-    exit 1
-}
-
-
 #env erstellen
 { # try
     sudo python -m venv --system-site-packages "$abs_path/env"
@@ -134,10 +118,26 @@ fi
 
 #pip packete installieren
 { # try
-    pip install --break-system-packages wheel numpy flask gunicorn gpiozero RPi.GPIO picamera2
+    pip install wheel numpy flask gunicorn gpiozero RPi.GPIO picamera2 #--break-system-packages
     print_success "Python Pakete erfolgreich"
 } || { # catch
     print_error "Fehler beim installieren der Python Pakete mit pip aufgetreten"
+    exit 1
+}
+
+
+# Berechtigungen anpassen
+{ # try
+    if grep -q "^smartwaste_dev:" /etc/group; then
+        print_info "Die Gruppe 'smartwaste_dev' existiert bereits."
+    else
+        sudo groupadd smartwaste_dev
+    fi
+    sudo chmod -R 774 "$directory_name"
+    sudo chown -R root:smartwaste_dev "$directory_name"
+    print_success "Berechtigungen erfolgreich angepasst"
+} || { # catch
+    print_error "Fehler beim Setzen der Berechtigungen aufgetreten"
     exit 1
 }
 

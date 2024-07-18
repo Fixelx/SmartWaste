@@ -1,9 +1,9 @@
 server {
     listen 80;
-    server_name 192.168.1.31;  # Die IP-Adresse deines Raspberry Pi
+    server_name 10.4.65.53;  # Die IP-Adresse deines Raspberry Pi
 
     location / {
-        proxy_pass http://192.168.1.31:8000;  # Die Adresse, unter der Gunicorn läuft
+        proxy_pass http://10.4.65.53:8000;  # Die Adresse, unter der Gunicorn läuft
         include /etc/nginx/proxy_params;
         proxy_redirect off;
     }

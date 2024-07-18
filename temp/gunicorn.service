@@ -5,7 +5,11 @@ After=network.target
 [Service]
 User=root
 Group=root
+
+# Installationspfad definieren
 Environment="INSTALL_PATH=/home/SmartWaste/project"
+
+# Verwendung der Installationspfad-Variable
 WorkingDirectory=${INSTALL_PATH}
 Environment="PYTHONPATH=${INSTALL_PATH}/env/lib/python3.11/site-packages"
 Environment="GUNICORN_BIN_PATH=${INSTALL_PATH}/env/bin/gunicorn"

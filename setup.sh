@@ -33,7 +33,7 @@ print_info() {
 
 ################################################################################################
 ################################################################################################
-# OPTIONAL Netzwerkkonfiguration
+# OPTIONAL Systemzeit
 CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M:%S")
 sudo timedatectl set-ntp false
 
@@ -126,8 +126,8 @@ fi
 
 #env erstellen
 { # try
-    sudo python -m venv --system-site-packages "$abs_path/env"
-    source "$abs_path/env/bin/activate"
+    sudo python -m venv --system-site-packages "$abs_path/smartwaste-env"
+    source "$abs_path/smartwaste-env/bin/activate"
     print_success "Virtual-Environment wurde erstellt"
 } || { # catch
     print_error "Die Python Environment konnte nicht erstellt werden"
@@ -300,7 +300,7 @@ User=www-data
 Group=www-data
 
 WorkingDirectory=$abs_path
-ExecStart=/home/Felix/smartwaste/env/bin/gunicorn --workers 3 --bind $current_ip:8000 --access-logfile /home/Felix/smartwaste/log/gunicorn/access.log --error-logfile /home/Felix/smartwaste/log/gunicorn/error.log app:app
+ExecStart=/home/Felix/smartwaste/smartwaste-env/bin/gunicorn --workers 3 --bind $current_ip:8000 --access-logfile /home/Felix/smartwaste/log/gunicorn/access.log --error-logfile /home/Felix/smartwaste/log/gunicorn/error.log app:app
 
 # Restart policies
 Restart=always
@@ -344,7 +344,7 @@ WantedBy=multi-user.target
 #L2C aktivieren
 {
 # Erstellen einer temporären Konfigurationsdatei für raspi-config
-    CONFIG_SCRIPT=$(mktemp /tmp/raspi-config-run.XXXXXX.sh)
+    CONFIG_SCRIPT=$(mktemp /tmp/raspi-config-run.sh)
 
     # Schreiben der automatisierten raspi-config Optionen in die temporäre Datei
     cat <<'EOF' > "$CONFIG_SCRIPT"

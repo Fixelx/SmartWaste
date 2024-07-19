@@ -30,6 +30,34 @@ print_info() {
     exit 1
 }
 
+#Systemzeit überprüfen
+{ # try
+    if ! command -v timedatectl &> /dev/null; then
+        print_info "timedatectl ist nicht installiert. Installation wird durchgeführt..."
+        sudo apt-get install -y systemd
+    fi
+
+    NTP_STATUS=$(timedatectl show | grep NTPSynchronized | cut -d= -f2)
+
+    if [ "$NTP_STATUS" = "yes" ]; then
+        print_info "NTP ist bereits aktiviert."
+    else
+        print_info "NTP ist deaktiviert. Aktivierung wird vorgenommen..."
+        sudo timedatectl set-ntp true
+
+    NEW_NTP_STATUS=$(timedatectl show | grep NTPSynchronized | cut -d= -f2)
+    if [ "$NEW_NTP_STATUS" = "yes" ]; then
+        print_success "NTP wurde erfolgreich aktiviert"
+    else
+        print_error "NTP konnte nicht aktiviert werden. Bitte überprüfen Sie Ihre Einstellungen."
+        exit 1
+    fi
+fi
+} || { # catch
+    print_error "Fehler beim aktualisieren der Systemzeit"
+    exit 1
+}
+
 ################################################################################################
 ################################################################################################
 # OPTIONAL Netzwerkkonfiguration

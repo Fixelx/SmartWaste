@@ -30,7 +30,8 @@ print_info() {
     exit 1
 }
 
-#Systemzeit überprüfen
+
+# Systemzeit überprüfen
 if ! command -v timedatectl &> /dev/null; then
     print_info "timedatectl ist nicht installiert. Installation wird durchgeführt..."
     sudo apt-get update
@@ -53,6 +54,12 @@ if ! dpkg -l | grep -q ntp; then
     fi
 fi
 
+# NTP-Dienst neu starten und aktivieren
+print_info "NTP-Dienst wird neu gestartet und aktiviert..."
+sudo systemctl restart ntp
+sudo systemctl enable ntp
+
+# Überprüfen, ob NTP aktiviert ist
 NTP_STATUS=$(timedatectl show | grep NTPSynchronized | cut -d= -f2)
 
 if [ "$NTP_STATUS" = "yes" ]; then

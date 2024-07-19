@@ -106,7 +106,14 @@ fi
 
 
 #env erstellen
-#!/bin/bash
+{ # try
+    sudo python -m venv --system-site-packages "$abs_path/env"
+    source "$abs_path/env/bin/activate"
+    print_success "Virtual-Environment erfolgreich"
+} || { # catch
+    print_error "Fehler beim erstellen der Python Environment aufgetreten"
+    exit 1
+}
 
 # Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
 install_packages() {

@@ -136,7 +136,7 @@ fi
 
 # Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
 install_packages() {
-    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "libcamera-dev" "adafruit-circuitpython-ads1x15" "adafruit-blinka")
+    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "adafruit-circuitpython-ads1x15" "adafruit-blinka")
     local successful=()
     local failed=()
 
@@ -206,11 +206,11 @@ fi
 
 
 #libcamera installieren
-{ # try
-    sudo apt install -y python3-libcamera
-    print_success "Packet:libcamera erfolgreich"
-} || { # catch
-    print_error "Fehler beim installieren des Pakets:libcamera aufgetreten"
+{
+    sudo apt install -y python3-libcamera && sudo apt install -y python3-libcamera-dev
+    print_success "Packet: libcamera erfolgreich installiert"
+} || {
+    print_error "Fehler beim Installieren des Pakets: libcamera aufgetreten"
     exit 1
 }
 

@@ -31,14 +31,28 @@ print_info() {
 }
 
 #Systemzeit überprüfen
-# Überprüfen, ob timedatectl installiert ist
 if ! command -v timedatectl &> /dev/null; then
     print_info "timedatectl ist nicht installiert. Installation wird durchgeführt..."
     sudo apt-get update
     sudo apt-get install -y systemd
+    # Überprüfen, ob die Installation erfolgreich war
+    if ! command -v timedatectl &> /dev/null; then
+        print_error "Installation von systemd fehlgeschlagen. timedatectl konnte nicht gefunden werden."
+        exit 1
+    fi
 fi
 
-# Überprüfen des NTP-Status
+# Überprüfen, ob ntp installiert ist
+if ! dpkg -l | grep -q ntp; then
+    print_info "ntp ist nicht installiert. Installation wird durchgeführt..."
+    sudo apt-get install -y ntp
+    # Überprüfen, ob die Installation erfolgreich war
+    if ! dpkg -l | grep -q ntp; then
+        print_error "Installation von ntp fehlgeschlagen."
+        exit 1
+    fi
+fi
+
 NTP_STATUS=$(timedatectl show | grep ^NTP= | cut -d= -f2)
 
 if [ "$NTP_STATUS" = "yes" ]; then
@@ -146,7 +160,7 @@ fi
 
 # Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
 install_packages() {
-    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "libcamera-dev")
+    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "libcamera-dev" "adafruit-circuitpython-ads1x15" "adafruit-blinka")
     local successful=()
     local failed=()
 
@@ -326,6 +340,68 @@ WantedBy=multi-user.target
 }
 
 
+# Audiotreiber installieren
+{
+    git clone https://github.com/waveshare/WM8960-Audio-HAT
+    cd WM8960-Audio-HAT || { print_error "Verzeichniswechsel fehlgeschlagen"; exit 1; }
+
+    if sudo ./install.sh; then
+        print_success "Audiotreiber erfolgreich installiert"
+    else
+        print_error "Fehler bei der Installation des Audiotreibers"
+        exit 1
+    fi
+
+    # Überprüfen, ob der Treiber geladen ist
+    if lsmod | grep -q wm8960; then
+        print_success "Treiber ist geladen"
+    else
+        print_error "Treiber ist nicht geladen"
+        exit 1
+    fi
+
+    # Neustarten der betroffenen Dienste
+    if sudo systemctl restart alsa-state && sudo systemctl restart pulseaudio; then
+        print_success "Dienste erfolgreich neu gestartet"
+    else
+        print_error "Fehler beim Neustarten der Dienste"
+        exit 1
+    fi
+
+    print_info "Überprüfen Sie die Audioausgabe, um sicherzustellen, dass alles funktioniert."
+} || {
+    print_error "Fehler beim Installieren des Audiotreibers aufgetreten"
+    exit 1
+}
+
+#L2C aktivieren
+{
+# Erstellen einer temporären Konfigurationsdatei für raspi-config
+    CONFIG_SCRIPT=$(mktemp /tmp/raspi-config-run.XXXXXX.sh)
+
+    # Schreiben der automatisierten raspi-config Optionen in die temporäre Datei
+    cat <<'EOF' > "$CONFIG_SCRIPT"
+# Raspi-config Automatisierung
+raspi-config nonint do_i2c 0
+EOF
+
+    # Ausführen der Konfigurationsdatei
+    if sudo bash "$CONFIG_SCRIPT"; then
+        print_success "I2C wurde aktiviert."
+    else
+        print_error "Fehler beim Ausführen von raspi-config."
+        rm "$CONFIG_SCRIPT"
+        exit 1
+    fi
+
+    # Löschen der temporären Konfigurationsdatei
+    rm "$CONFIG_SCRIPT"
+} || {
+    print_error "Fehler beim Erstellen oder Ausführen des Konfigurationsskripts."
+    exit 1
+}
+
+
 #Gunicorn starten
 { # try
     sudo systemctl daemon-reload
@@ -344,3 +420,4 @@ sudo rm "setup.sh"
 sleep 5
 sudo systemctl status gunicorn
 print_success "Setup abgeschlossen"
+print_info "Ein Neustart des Systems kann erforderlich sein, um alle Änderungen vollständig zu übernehmen."

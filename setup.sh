@@ -145,7 +145,7 @@ fi
 
 # Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
 install_packages() {
-    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime")
+    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "libcamera-dev")
     local successful=()
     local failed=()
 

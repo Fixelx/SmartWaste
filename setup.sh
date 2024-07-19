@@ -46,7 +46,7 @@ if [ "$NTP_STATUS" = "yes" ]; then
 else
     print_info "NTP ist deaktiviert. Aktivierung wird vorgenommen..."
     if sudo timedatectl set-ntp true; then
-        NEW_NTP_STATUS=$(timedatectl show | grep NTPSynchronized | cut -d= -f2)
+        NEW_NTP_STATUS=$(timedatectl show | grep NTP | cut -d= -f2)
         if [ "$NEW_NTP_STATUS" = "yes" ]; then
             print_success "NTP wurde erfolgreich aktiviert."
         else

@@ -335,16 +335,6 @@ WantedBy=multi-user.target
         print_error "Treiber ist nicht geladen"
         exit 1
     fi
-
-    # Neustarten der betroffenen Dienste
-    if sudo systemctl restart alsa-state && sudo systemctl restart pulseaudio; then
-        print_success "Dienste erfolgreich neu gestartet"
-    else
-        print_error "Fehler beim Neustarten der Dienste"
-        exit 1
-    fi
-
-    print_info "Überprüfen Sie die Audioausgabe, um sicherzustellen, dass alles funktioniert."
 } || {
     print_error "Fehler beim Installieren des Audiotreibers aufgetreten"
     exit 1

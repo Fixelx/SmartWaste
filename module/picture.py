@@ -1,15 +1,23 @@
 import os
-from time import sleep
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 
 def take():
     directory = "img"
+   
     name = os.path.join(directory, "object.jpg")
     picam2 = Picamera2()
+
     try:
-        picam2.start_preview()
-        picam2.start_and_capture_file(name)
-        return True
+        # Konfiguration für die Aufnahme
+        picam2.configure(picam2.create_still_configuration())
+        picam2.start()
+        
+        # Direktes Bild aufnehmen
+        picam2.capture_file(name)
+        print(f"Bild gespeichert: {name}")
+
     finally:
-        picam2.stop_preview()
+        picam2.stop()
         picam2.close()
+
+    return name

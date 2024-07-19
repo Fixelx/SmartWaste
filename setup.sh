@@ -106,24 +106,56 @@ fi
 
 
 #env erstellen
-{ # try
-    sudo python -m venv --system-site-packages "$abs_path/env"
-    source "$abs_path/env/bin/activate"
-    print_success "Virtual-Environment erfolgreich"
-} || { # catch
-    print_error "Fehler beim erstellen der Python Environment aufgetreten"
-    exit 1
+#!/bin/bash
+
+# Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
+install_packages() {
+    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime")
+    local successful=()
+    local failed=()
+
+    for package in "${packages[@]}"; do
+        if pip3 install "$package"; then
+            successful+=("$package")
+        else
+            failed+=("$package")
+        fi
+    done
+
+    print_success "Erfolgreich installierte Pakete: ${successful[*]}"
+    print_error "Fehlgeschlagene Pakete: ${failed[*]}"
+
+    if [ ${#failed[@]} -eq 0 ]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
+if install_packages; then
+    print_success "Alle Python Pakete erfolgreich installiert"
+else
+    print_error "Fehler beim Installieren einiger Python Pakete mit pip aufgetreten"
 
-#pip packete installieren
-{ # try
-    pip install wheel numpy flask gunicorn gpiozero RPi.GPIO picamera2 #--break-system-packages
-    print_success "Python Pakete erfolgreich"
-} || { # catch
-    print_error "Fehler beim installieren der Python Pakete mit pip aufgetreten"
-    exit 1
-}
+    if ! python3 -c "import tensorflow as tf; print(tf.__version__)" &> /dev/null; then
+        print_error "tensorflow konnte nicht installiert werden. Zusätzliche Abhängigkeiten werden installiert."
+
+        sudo apt-get install libhdf5-dev
+        sudo apt-get install -y build-essential
+
+        # Erneut versuchen die Pakete zu installieren
+        if install_packages; then
+            print_success "Alle Python Pakete erfolgreich installiert nach der Installation zusätzlicher Abhängigkeiten"
+        else
+            print_error "Fehler beim erneuten Installieren einiger Python Pakete mit pip"
+            exit 1
+        fi
+    else
+        print_error "Ein anderer Fehler ist aufgetreten."
+        exit 1
+    fi
+fi
+
 
 
 # Berechtigungen anpassen

@@ -1,10 +1,10 @@
 from flask import Flask, render_template
 from module.picture import *
-import RPi.GPIO as GPIO  # Falls GPIO benötigt wird
+from module.analyse import *
+import RPi.GPIO as GPIO
 
-app = Flask(__name__, template_folder='www/')
+app = Flask(__name__, template_folder='www/', static_folder='www/static')
 
-# GPIO Setup (falls benötigt)
 LED_PIN = 17
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -24,10 +24,12 @@ def led_action(action):
 
 @app.route('/start')
 def start():
-    if take():  
-        return "True"
+    image_path = take()
+    if image_path:
+        result = erkennen(image_path)
+        return result
     else:
-        return "False"
+        return "Fehler beim Aufnehmen des Bildes"
 
 if __name__ == '__main__':
     app.run()

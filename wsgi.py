@@ -2,14 +2,13 @@ import socket
 from app import app
 
 def get_ip_address():
-    # Versuche, die IP-Adresse des Geräts zu ermitteln
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.settimeout(0)
-        s.connect(('10.254.254.254', 1))  # Eine nicht erreichbare IP-Adresse
+        s.connect(('10.254.254.254', 1))
         ip_address = s.getsockname()[0]
     except Exception:
-        ip_address = '127.0.0.1'  # Fallback zu localhost
+        ip_address = '127.0.0.1'
     finally:
         s.close()
     

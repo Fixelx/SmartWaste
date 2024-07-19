@@ -30,6 +30,19 @@ print_info() {
     exit 1
 }
 
+
+CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M:%S")
+sudo timedatectl set-ntp false
+
+if sudo date -s "$CURRENT_DATE_TIME"; then
+    echo "Erfolg: Systemzeit erfolgreich auf $CURRENT_DATE_TIME gesetzt."
+else
+    echo "Fehler: Fehler beim Setzen der Systemzeit."
+    exit 1
+fi
+
+sudo timedatectl set-ntp true
+
 ################################################################################################
 ################################################################################################
 # OPTIONAL Netzwerkkonfiguration

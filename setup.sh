@@ -26,7 +26,7 @@ print_info() {
     sudo apt-get install -y ipcalc
     print_success "Systemupdate erfolgreich"
 } || { # catch
-    print_error "Fehler beim Systemupdate ist aufgetreten"
+    print_error "Systemupdate ist fehlgeschlagen"
     exit 1
 }
 
@@ -40,7 +40,7 @@ sudo timedatectl set-ntp false
 if sudo date -s "$CURRENT_DATE_TIME"; then
     echo "Erfolg: Systemzeit erfolgreich auf $CURRENT_DATE_TIME gesetzt."
 else
-    echo "Fehler: Fehler beim Setzen der Systemzeit."
+    echo "Die Systemzeit konnte nicht aktualisiert werden"
     exit 1
 fi
 
@@ -83,13 +83,13 @@ iface eth0 inet static
         sudo cp /etc/network/interfaces /etc/network/interfaces.backup
         echo "$static_ip_config" | sudo tee /etc/network/interfaces > /dev/null
         sudo systemctl restart networking
-        print_success "Netzwerkkonfiguration erfolgreich aktualisiert."
+        print_success "Netzwerkkonfiguration erfolgreich aktualisiert"
     } || {
-        print_error "Fehler beim Setzen der IP aufgetreten."
+        print_error "Die IP-Adresse konnte nicht auf statisch gesetzt werden"
         exit 1
     }
 else
-    print_info "Die Netzwerkkonfiguration wurde übersprungen."
+    print_info "Die Netzwerkkonfiguration wurde übersprungen"
 fi
 ################################################################################################
 ################################################################################################
@@ -105,10 +105,10 @@ fi
         git clone "$github_repo" "$abs_path"
         print_success "Git Clone erfolgreich"
     else
-        print_error "Verzeichnis \"$abs_path\" existiert bereits."
+        print_info "Verzeichnis \"$abs_path\" existiert bereits."
     fi
 } || { # catch
-    print_error "Fehler beim Clonen von Github aufgetreten"
+    print_error "Das Clonen von Github aufgetreten ist fehlgeschlagen"
     exit 1
 }
 
@@ -119,7 +119,7 @@ fi
     mkdir -p "$abs_path/img"
     print_success "Verzeichnisstruktur erfolgreich erstellt"
 } || { # catch
-    print_error "Fehler beim Erstellen der Verzeichnisse aufgetreten"
+    print_error "Verzeichnisse konnten nicht erstellt werden"
     exit 1
 }
 
@@ -128,9 +128,9 @@ fi
 { # try
     sudo python -m venv --system-site-packages "$abs_path/env"
     source "$abs_path/env/bin/activate"
-    print_success "Virtual-Environment erfolgreich"
+    print_success "Virtual-Environment wurde erstellt"
 } || { # catch
-    print_error "Fehler beim erstellen der Python Environment aufgetreten"
+    print_error "Die Python Environment konnte nicht erstellt werden"
     exit 1
 }
 
@@ -166,23 +166,23 @@ install_packages() {
 if install_packages; then
     print_success "Alle Python Pakete erfolgreich installiert"
 else
-    print_error "Fehler beim Installieren einiger Python Pakete mit pip aufgetreten"
+    print_error "Die Installation einiger Python Pakete mit pip ist fehlgeschlagen"
 
     if ! python3 -c "import tensorflow as tf; print(tf.__version__)" &> /dev/null; then
-        print_error "tensorflow konnte nicht installiert werden. Zusätzliche Abhängigkeiten werden installiert."
+        print_error "tensorflow konnte nicht installiert werden. Zusätzliche Abhängigkeiten werden installiert..."
 
         sudo apt-get install libhdf5-dev
         sudo apt-get install -y build-essential
 
         # Erneut versuchen die Pakete zu installieren
         if install_packages; then
-            print_success "Alle Python Pakete erfolgreich installiert nach der Installation zusätzlicher Abhängigkeiten"
+            print_success "Alle Python Pakete erfolgreich installiert"
         else
-            print_error "Fehler beim erneuten Installieren einiger Python Pakete mit pip"
+            print_error "Die erneute Installation einiger Python Pakete mit pip ist fehlgeschlagen"
             exit 1
         fi
     else
-        print_error "Ein anderer Fehler ist aufgetreten."
+        print_error "Ein Fehler bei der instalation der Python Pakete ist aufgetreten"
         exit 1
     fi
 fi
@@ -198,9 +198,10 @@ fi
     fi
     sudo chmod -R 774 "$directory_name"
     sudo chown -R root:smartwaste_dev "$directory_name"
+    sudo usermod -aG smartwaste_dev $USER
     print_success "Berechtigungen erfolgreich angepasst"
 } || { # catch
-    print_error "Fehler beim Setzen der Berechtigungen aufgetreten"
+    print_error "Die Berechtigungen konnten nicht korrekt gesetzt werden"
     exit 1
 }
 
@@ -208,9 +209,9 @@ fi
 #libcamera installieren
 {
     sudo apt install -y python3-libcamera && sudo apt install -y python3-libcamera-dev
-    print_success "Packet: libcamera erfolgreich installiert"
+    print_success "libcamera wurde erfolgreich installiert"
 } || {
-    print_error "Fehler beim Installieren des Pakets: libcamera aufgetreten"
+    print_error "libcamera konnte nicht installiert werden"
     exit 1
 }
 
@@ -219,9 +220,9 @@ fi
 #NGINX installieren
 { # try
     sudo apt-get install -y nginx
-    print_success "Packet:nginx erfolgreich"
+    print_success "Nginx wurde erfolgreich installiert"
 } || { # catch
-    print_error "Fehler beim installieren des Pakets:nginx aufgetreten"
+    print_error "Nginx konnte nicht installiert werden"
     exit 1
 }
 
@@ -253,9 +254,9 @@ server {
     echo "$nginx_config" | sudo tee /etc/nginx/sites-available/smartwaste > /dev/null
     sudo ln -sf /etc/nginx/sites-available/smartwaste /etc/nginx/sites-enabled/
     sudo systemctl restart nginx
-    print_success "Nginx-Konfiguration erfolgreich aktualisiert."
+    print_success "Nginx-Konfiguration erfolgreich aktualisiert"
 } || { # catch
-    print_error "Fehler beim Verschieben und Verlinken der Verzeichnisse aufgetreten"
+    print_error "Die Nginx-Konfiguration konnte nicht abgeschlossen werden"
     exit 1
 }
 
@@ -271,17 +272,17 @@ if [ $nginx_status -eq 0 ]; then
     if [ $? -eq 0 ]; then
         sudo systemctl reload nginx
         if [ $? -eq 0 ]; then
-            print_success "NGINX Konfiguration erfolgreich neu geladen."
+            print_success "NGINX Konfiguration erfolgreich neu geladen"
         else
-            print_error "Fehler beim Neuladen der NGINX Konfiguration."
+            print_error "Fehler beim Neuladen der NGINX Konfiguration"
             exit 1
         fi
     else
-        print_error "Fehler beim Starten von NGINX."
+        print_error "Fehler beim Starten von NGINX"
         exit 1
     fi
 else
-    print_error "NGINX Konfiguration konnte nicht überprüft werden. Beende Setup."
+    print_error "NGINX Konfiguration konnte nicht überprüft werden. Beende Setup..."
     exit 1
 fi
 
@@ -309,9 +310,9 @@ RestartSec=3
 WantedBy=multi-user.target
 "
     echo "$service_config" | sudo tee $service_file > /dev/null
-    print_success "Gunicorn-Service erfolgreich aktualisiert und neu gestartet."
+    print_success "Gunicorn-Service erfolgreich aktualisiert und neu gestartet"
 } || { # catch
-        print_error "Fehler beim Verschieben der Datei gunicorn.service aufgetreten"
+        print_error "Die Datei gunicorn.service konnte nicht verschoben werden"
         exit 1
 }
 
@@ -336,7 +337,7 @@ WantedBy=multi-user.target
         exit 1
     fi
 } || {
-    print_error "Fehler beim Installieren des Audiotreibers aufgetreten"
+    print_error "Der Audiotreiber konnte nicht installiert werden"
     exit 1
 }
 
@@ -353,9 +354,9 @@ EOF
 
     # Ausführen der Konfigurationsdatei
     if sudo bash "$CONFIG_SCRIPT"; then
-        print_success "I2C wurde aktiviert."
+        print_success "I2C wurde aktiviert"
     else
-        print_error "Fehler beim Ausführen von raspi-config."
+        print_error "raspi-config konnte nicht ausgeführt werden"
         rm "$CONFIG_SCRIPT"
         exit 1
     fi
@@ -363,7 +364,7 @@ EOF
     # Löschen der temporären Konfigurationsdatei
     rm "$CONFIG_SCRIPT"
 } || {
-    print_error "Fehler beim Erstellen oder Ausführen des Konfigurationsskripts."
+    print_error "Konfigurationsskript konnte nicht erstellt/geladen werden"
     exit 1
 }
 
@@ -374,16 +375,15 @@ EOF
     sudo systemctl start gunicorn
     sudo systemctl enable gunicorn
     print_success "Gunicorn erfolgreich gestartet"
-    print_info "Mit \"sudo systemctl start gunicorn\" lässt sich der Service starten."
+    print_info "Mit \"sudo systemctl start gunicorn\" lässt sich der Service starten"
 } || { # catch
-    print_error "Fehler beim starten von Gunicorn aufgetreten"
+    print_error "Gunicorn konnte nicht gestartet werden"
     exit 1
 }
 
 
 #Setup abschließen
 sudo rm "setup.sh"
+sudo deluser $USER smartwaste_dev
 sleep 5
-sudo systemctl status gunicorn
 print_success "Setup abgeschlossen"
-print_info "Ein Neustart des Systems kann erforderlich sein, um alle Änderungen vollständig zu übernehmen."

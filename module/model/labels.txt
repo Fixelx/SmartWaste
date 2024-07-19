@@ -1,2 +1,3 @@
-0 Apfel
-1 Banane
+0 Papier
+1 Plastik
+2 Batterien

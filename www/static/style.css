@@ -1,16 +1,157 @@
-/* /home/SmartWaste/www/static/style.css */
+* {
+    --primary_color: #3f444d;
+    --secondary_color: #dce2e8;
+    --third_color: #0e1117; /*303f85*/
+    --cc_color: #009ddc;
+    color: var(--secondary_color);
+    font-weight: 300;
+    font-size: 12px;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    background: var(--primary_color);
+    margin: 0;
+    font-family: "Comic Sans MS", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    overflow: hidden;
 }
 
-h1 {
-    color: green;
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin: 10px;
+main .gif {
+    width: auto;
+    height: 95vh;
+}
+
+main .ergebnis {
+    position: absolute;
+    right: 10px;
+    top: 110px;
+}
+
+main .ergebnis p {
+    width: 120px;
+    margin-left: 60px;
+    margin-top: 30px;
+    rotate: 14deg;
+}
+
+main .menu {
+    position: absolute;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 100vh;
+}
+
+main .menu-ctn {
+    position: fixed;
+    left: 0;
+    height: 40vh;
+    width: auto;
+    background: var(--third_color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    padding: 0 20px 0 0;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    border-right: 1px solid var(--secondary_color);
+    border-top: 1px solid var(--secondary_color);
+    border-bottom: 1px solid var(--secondary_color);
+}
+
+main .menu img {
+    width: 80px;
+    height: auto;
+}
+
+
+
+
+
+
+
+
+
+footer {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100vw;
+    box-sizing: border-box;
+    padding: 3px 10px;
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+}
+
+.footer-logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.footer-info h1 {
+    padding: 3px 0;
+    margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+.batterie-status{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column;
+}
+
+
+.batterie-status > div{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 60vw;
+}
+
+.batterie-status-bar {
+    width: 300px;
+    height: 24px;
+    background-color: var(--secondary_color);
+    border-radius: 10px;  
+    display: flex;
+    align-items: center;
+}
+
+.number, .batterie-status-bar-label {
+    color: var(--cc_color);
+}
+
+.batterie-status-bar-label {
+
+    position: absolute;
+    margin-left: 10px;
+}
+
+.batterie-status-bar-stand {
+    height: 100%;
+    background-color: var(--third_color);
+    border-radius: 10px;
 }

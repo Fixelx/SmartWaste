@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartWaste Dashboard</title>
+    <link rel="stylesheet" href="style.css">   
+</head>
+ 
+<body>
+    <header></header>
+    <main>
+        <div class="batterie-status">
+            <div>
+                <div class="batterie-status-bar">
+                    <p class="batterie-status-bar-label">Batterie 1</p>
+                    <div class="batterie-status-bar-stand batterie1"></div>
+                </div>
+                <p class="number batterie1-number"></p>  
+            </div>
+            <div>
+                <div class="batterie-status-bar">
+                    <p class="batterie-status-bar-label">Batterie 2</p>
+                    <div class="batterie-status-bar-stand batterie2"></div>
+                </div>
+                <p class="number batterie2-number"></p>  
+            </div>
+            <div>
+                <div class="batterie-status-bar">
+                    <p class="batterie-status-bar-label">Batterie 3</p>
+                    <div class="batterie-status-bar-stand batterie3"></div>
+                </div>
+                <p class="number batterie3-number"></p>  
+            </div>
+            <div>
+                <div class="batterie-status-bar">
+                    <p class="batterie-status-bar-label">Batterie 4</p>
+                    <div class="batterie-status-bar-stand batterie4"></div>
+                </div>
+                <p class="number batterie4-number"></p>  
+            </div> 
+        </div>
+            
+        </div>
+        <div class="menu">
+            <div class="menu-ctn">
+                <img src="img/animation.gif" alt="">
+            </div>
+        </div>
+    </main>
+
+
+    <footer>
+        <div class="footer-logo">
+            <img src="img/animation.gif" alt="CC Logo">
+        </div>
+        <div class="footer-info">
+            <h1>Informationen</h1>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        let batterie1 = 54;
+        let batterie2 = 50;
+        let batterie3 = 83;
+        let batterie4 = 100;
+
+        function setstatus(className, status) {
+            const batterieElement = document.getElementsByClassName(className)[0];
+            const numberElement = document.getElementsByClassName(className + '-number')[0];
+            if (batterieElement) {
+                batterieElement.style.width = `${status}%`;
+            }
+            if (numberElement) {
+                numberElement.textContent = `${status}%`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            setstatus('batterie1', batterie1);
+            setstatus('batterie2', batterie2);
+            setstatus('batterie3', batterie3);
+            setstatus('batterie4', batterie4);
+        });
+    </script>
+</body>
+
+</html>

@@ -31,54 +31,22 @@ print_info() {
 }
 
 
-# Systemzeit überprüfen
-if ! command -v timedatectl &> /dev/null; then
-    print_info "timedatectl ist nicht installiert. Installation wird durchgeführt..."
-    sudo apt-get update
-    sudo apt-get install -y systemd
-    # Überprüfen, ob die Installation erfolgreich war
-    if ! command -v timedatectl &> /dev/null; then
-        print_error "Installation von systemd fehlgeschlagen. timedatectl konnte nicht gefunden werden."
-        exit 1
-    fi
-fi
+CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M:%S")
+SYSTEM_DATE_TIME=$(timedatectl show --property=TimeUSec --value | xargs -I{} date -d @$(($(echo {} | awk '{print int($1/1000000)}'))) +"%Y-%m-%d %H:%M:%S")
 
-# Überprüfen, ob ntp installiert ist
-if ! dpkg -l | grep -q ntp; then
-    print_info "ntp ist nicht installiert. Installation wird durchgeführt..."
-    sudo apt-get install -y ntp
-    # Überprüfen, ob die Installation erfolgreich war
-    if ! dpkg -l | grep -q ntp; then
-        print_error "Installation von ntp fehlgeschlagen."
-        exit 1
-    fi
-fi
-
-# NTP-Dienst neu starten und aktivieren
-print_info "NTP-Dienst wird neu gestartet und aktiviert..."
-sudo systemctl restart ntp
-sudo systemctl enable ntp
-
-# Überprüfen, ob NTP aktiviert ist
-NTP_STATUS=$(timedatectl show | grep NTPSynchronized | cut -d= -f2)
-
-if [ "$NTP_STATUS" = "yes" ]; then
-    print_info "NTP ist bereits aktiviert."
-else
-    print_info "NTP ist deaktiviert. Aktivierung wird vorgenommen..."
-    if sudo timedatectl set-ntp true; then
-        NEW_NTP_STATUS=$(timedatectl show | grep NTPSynchronized | cut -d= -f2)
-        if [ "$NEW_NTP_STATUS" = "yes" ]; then
-            print_success "NTP wurde erfolgreich aktiviert."
-        else
-            print_error "NTP konnte nicht aktiviert werden. Bitte überprüfen Sie Ihre Einstellungen."
-            exit 1
-        fi
+if [ "$SYSTEM_DATE_TIME" != "$CURRENT_DATE_TIME" ]; then
+    print_info "Systemzeit stimmt nicht mit der aktuellen Zeit überein. Setze Systemzeit auf $CURRENT_DATE_TIME..."
+    
+    if sudo timedatectl set-time "$CURRENT_DATE_TIME"; then
+        print_success "Systemzeit erfolgreich auf $CURRENT_DATE_TIME gesetzt."
     else
-        print_error "Bitte überprüfen Sie Ihre Berechtigungen oder Systemkonfiguration."
+        print_error "Fehler beim Setzen der Systemzeit."
         exit 1
     fi
+else
+    print_success "Systemzeit ist bereits korrekt auf $CURRENT_DATE_TIME."
 fi
+
 
 ################################################################################################
 ################################################################################################

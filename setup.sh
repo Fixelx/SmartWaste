@@ -150,15 +150,20 @@ install_packages() {
     local failed=()
 
     for package in "${packages[@]}"; do
-        if pip3 install "$package"; then
+        if pip install "$package"; then
             successful+=("$package")
         else
             failed+=("$package")
         fi
     done
 
-    print_success "Erfolgreich installierte Pakete: ${successful[*]}"
-    print_error "Fehlgeschlagene Pakete: ${failed[*]}"
+    if [ ${#successful[@]} -ne 0 ]; then
+        print_success "Erfolgreich installierte Pakete: ${successful[*]}"
+    fi
+
+    if [ ${#failed[@]} -ne 0 ]; then
+        print_error "Fehlgeschlagene Pakete: ${failed[*]}"
+    fi
 
     if [ ${#failed[@]} -eq 0 ]; then
         return 0
@@ -334,7 +339,7 @@ WantedBy=multi-user.target
 
 
 #Setup abschließen
-#sudo rm "$abs_path/../setup.sh"
+sudo rm "setup.sh"
 sleep 5
 sudo systemctl status gunicorn
 print_success "Setup abgeschlossen"

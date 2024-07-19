@@ -30,49 +30,6 @@ print_info() {
     exit 1
 }
 
-
-# Systemzeit anpassen
-# Aktuelles Datum und Uhrzeit abrufen
-CURRENT_DATE_TIME=$(date +"%Y-%m-%d %H:%M:%S")
-
-# Aktuelle Systemzeit abrufen
-SYSTEM_DATE_TIME=$(timedatectl show --property=TimeUSec --value | xargs -I{} date -d @$(($(echo {} | awk '{print int($1/1000000)}'))) +"%Y-%m-%d %H:%M:%S")
-
-print_info "Aktuelle Systemzeit: $SYSTEM_DATE_TIME"
-print_info "Aktuelles Datum und Uhrzeit: $CURRENT_DATE_TIME"
-
-# Vergleichen der aktuellen Zeit mit der Systemzeit
-if [ "$SYSTEM_DATE_TIME" != "$CURRENT_DATE_TIME" ]; then
-    print_info "Systemzeit stimmt nicht mit der aktuellen Zeit überein. Setze Systemzeit auf $CURRENT_DATE_TIME..."
-
-    # Automatische Zeit-Synchronisierung deaktivieren
-    if sudo timedatectl set-ntp false; then
-        print_success "Automatische Zeit-Synchronisierung wurde deaktiviert."
-    else
-        print_error "Fehler beim Deaktivieren der automatischen Zeit-Synchronisierung."
-        exit 1
-    fi
-
-    # Systemzeit setzen
-    if sudo timedatectl set-time "$CURRENT_DATE_TIME"; then
-        print_success "Systemzeit erfolgreich auf $CURRENT_DATE_TIME gesetzt."
-    else
-        print_error "Fehler beim Setzen der Systemzeit."
-        exit 1
-    fi
-
-    # Automatische Zeit-Synchronisierung wieder aktivieren
-    if sudo timedatectl set-ntp true; then
-        print_success "Automatische Zeit-Synchronisierung wurde wieder aktiviert."
-    else
-        print_error "Fehler beim Aktivieren der automatischen Zeit-Synchronisierung."
-        exit 1
-    fi
-else
-    print_success "Systemzeit ist bereits korrekt auf $CURRENT_DATE_TIME."
-fi
-
-
 ################################################################################################
 ################################################################################################
 # OPTIONAL Netzwerkkonfiguration

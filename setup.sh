@@ -136,7 +136,7 @@ fi
 
 # Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
 install_packages() {
-    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "adafruit-circuitpython-ads1x15" "adafruit-blinka")
+    local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "adafruit-circuitpython-ads1x15" "adafruit-blinka" "Adafruit_ADS1x15")
     local successful=()
     local failed=()
 

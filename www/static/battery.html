@@ -15,36 +15,34 @@
             <div>
                 <div class="batterie-status-bar">
                     <p class="batterie-status-bar-label">Batterie 1</p>
-                    <div class="batterie-status-bar-stand batterie1"></div>
+                    <div class="batterie-status-bar-stand batterie1" style="width: {{ battery1 }}%;"></div>
                 </div>
-                <p class="number batterie1-number"></p>  
+                <p class="number batterie1-number">{{ battery1 }}%</p>  
             </div>
             <div>
                 <div class="batterie-status-bar">
                     <p class="batterie-status-bar-label">Batterie 2</p>
-                    <div class="batterie-status-bar-stand batterie2"></div>
+                    <div class="batterie-status-bar-stand batterie2" style="width: {{ battery2 }}%;"></div>
                 </div>
-                <p class="number batterie2-number"></p>  
+                <p class="number batterie2-number">{{ battery2 }}%</p>  
             </div>
             <div>
                 <div class="batterie-status-bar">
                     <p class="batterie-status-bar-label">Batterie 3</p>
-                    <div class="batterie-status-bar-stand batterie3"></div>
+                    <div class="batterie-status-bar-stand batterie3" style="width: {{ battery3 }}%;"></div>
                 </div>
-                <p class="number batterie3-number"></p>  
+                <p class="number batterie3-number">{{ battery3 }}%</p>  
             </div>
             <div>
                 <div class="batterie-status-bar">
                     <p class="batterie-status-bar-label">Batterie 4</p>
-                    <div class="batterie-status-bar-stand batterie4"></div>
+                    <div class="batterie-status-bar-stand batterie4" style="width: {{ battery4 }}%;"></div>
                 </div>
-                <p class="number batterie4-number"></p>  
+                <p class="number batterie4-number">{{ battery4 }}%</p>  
             </div> 
         </div>
-            
-        </div>
         <div class="menu">
-            <div class="menu-ctn">
+            <div class="menu-ctn" onclick="window.location.href='../index.html'">
                 <img src="img/animation.gif" alt="">
             </div>
         </div>
@@ -53,13 +51,13 @@
 
     <footer>
         <div class="footer-logo">
-            <img src="img/animation.gif" alt="CC Logo">
+            <img src="img/logo.svg" alt="CC Logo">
         </div>
         <div class="footer-info">
             <h1>Informationen</h1>
         </div>
     </footer>
-
+<!--
     <script type="text/javascript">
         let batterie1 = 54;
         let batterie2 = 50;
@@ -84,6 +82,7 @@
             setstatus('batterie4', batterie4);
         });
     </script>
+-->
 </body>
 
 </html>

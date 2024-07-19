@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from module.picture import *
 from module.analyse import *
+from module.battery import *
 import RPi.GPIO as GPIO
 
 app = Flask(__name__, template_folder='www/', static_folder='www/static')
@@ -30,6 +31,11 @@ def start():
         return result
     else:
         return "Fehler beim Aufnehmen des Bildes"
+
+@app.route('/battery')
+def battery():
+    battery1, battery2, battery3, battery4 = getBatteryStat()
+    return render_template('battery.html', battery1=battery1, battery2=battery2, battery3=battery3, battery4=battery4)
 
 if __name__ == '__main__':
     app.run()

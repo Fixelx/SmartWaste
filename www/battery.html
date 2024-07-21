@@ -1,37 +1,59 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batteriestatus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
     <main>
         <div class="batterie-status">
-            <div class="batterie-status-bar">
-                <p>Batterie 1</p>
-                <div class="batterie-status-bar-stand batterie1"><span></span></div>
-                <div><p class="batterie-status-bar-number batterie1-number"></p></div>
-                <div><p class="batterie-voltage batterie1-voltage"></p></div>
+            <div class="batterie-status-box">
+                <div class="batterie-status-label">
+                    <p>Batterie 1</p>
+                </div>
+                <div class="batterie-status-bar">
+                    <div class="batterie-status-bar-stand batterie1"><span></span></div>
+                </div>
+                <div class="batterie-status-number">
+                    <p class="batterie1-number"></p>
+                </div>
             </div>
-            <div class="batterie-status-bar">
-                <p>Batterie 2</p>
-                <div class="batterie-status-bar-stand batterie2"><span></span></div>
-                <div><p class="batterie-status-bar-number batterie2-number"></p></div>
-                <div><p class="batterie-voltage batterie2-voltage"></p></div>
+            <div class="batterie-status-box">
+                <div class="batterie-status-label">
+                    <p>Batterie 2</p>
+                </div>
+                <div class="batterie-status-bar">
+                    <div class="batterie-status-bar-stand batterie2"><span></span></div>
+                </div>
+                <div class="batterie-status-number">
+                    <p class="batterie2-number"></p>
+                </div>
             </div>
-            <div class="batterie-status-bar">
-                <p>Batterie 3</p>
-                <div class="batterie-status-bar-stand batterie3"><span></span></div>
-                <div><p class="batterie-status-bar-number batterie3-number"></p></div>
-                <div><p class="batterie-voltage batterie3-voltage"></p></div>
+            <div class="batterie-status-box">
+                <div class="batterie-status-label">
+                    <p>Batterie 3</p>
+                </div>
+                <div class="batterie-status-bar">
+                    <div class="batterie-status-bar-stand batterie3"><span></span></div>
+                </div>
+                <div class="batterie-status-number">
+                    <p class="batterie3-number"></p>
+                </div>
             </div>
-            <div class="batterie-status-bar">
-                <p>Batterie 4</p>
-                <div class="batterie-status-bar-stand batterie4"><span></span></div>
-                <div><p class="batterie-status-bar-number batterie4-number"></p></div>
-                <div><p class="batterie-voltage batterie4-voltage"></p></div>
+            <div class="batterie-status-box">
+                <div class="batterie-status-label">
+                    <p>Batterie 4</p>
+                </div>
+                <div class="batterie-status-bar">
+                    <div class="batterie-status-bar-stand batterie4"><span></span></div>
+                </div>
+                <div class="batterie-status-number">
+                    <p class="batterie4-number"></p>
+                </div>
             </div>
         </div>
         <div class="menu">
@@ -46,37 +68,40 @@
             <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="CC Logo">
         </div>
         <div class="footer-info">
-            <h1>Informationen</h1>
+            <h1></h1>
         </div>
     </footer>
 
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
+            setstatus('batterie1', 80); // Beispielwerte zum Testen
+            setstatus('batterie2', 50);
+            setstatus('batterie3', 50);
+            setstatus('batterie4', 50);
+
             fetch('/battery_status')
                 .then(response => response.json())
                 .then(data => {
-                    setstatus('batterie1', data.battery1.percentage, data.battery1.voltage);
-                    setstatus('batterie2', data.battery2.percentage, data.battery2.voltage);
-                    setstatus('batterie3', data.battery3.percentage, data.battery3.voltage);
-                    setstatus('batterie4', data.battery4.percentage, data.battery4.voltage);
+                    setstatus('batterie1', data.battery1.percentage);
+                    setstatus('batterie2', data.battery2.percentage);
+                    setstatus('batterie3', data.battery3.percentage);
+                    setstatus('batterie4', data.battery4.percentage);
                 })
-                .catch(error => console.error('Error fetching battery data:', error));
+                .catch(error => console.error('Fehler beim Abfragen der Daten: ', error));
         });
 
-        function setstatus(className, status, voltage) {
+        function setstatus(className, status) {
             const batterieElement = document.getElementsByClassName(className)[0];
             const numberElement = document.getElementsByClassName(className + '-number')[0];
-            const voltageElement = document.getElementsByClassName(className + '-voltage')[0];
             if (batterieElement) {
                 batterieElement.style.width = `${status}%`;
             }
             if (numberElement) {
-                numberElement.textContent = `Prozent: ${status.toFixed(2)}%`;
-            }
-            if (voltageElement) {
-                voltageElement.textContent = `Spannung: ${voltage.toFixed(2)}V`;
+                numberElement.textContent = `${Math.round(status)}%`; // Rundet auf ganze Zahlen
             }
         }
     </script>
+
 </body>
+
 </html>

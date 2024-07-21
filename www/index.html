@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartWaste Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
 
 <body>
     <header></header>
@@ -32,7 +31,7 @@
             <div class="menu-ctn" onclick="window.location.href='{{ url_for('battery') }}'">
                 <img src="{{ url_for('static', filename='img/battery.png') }}" alt="">
             </div>
-        </div>    
+        </div>
     </main>
 
     <footer>
@@ -40,9 +39,30 @@
             <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="CC Logo">
         </div>
         <div class="footer-info">
-            <h1>Informationen</h1>
+            <h1 id="info-title">Informationen</h1>
         </div>
     </footer>
+
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Mit der richtigen Müllentsorgung zur besseren Umwelt</h2>
+                <span id="close-button" class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Stell dir vor, du bist ein Müllsuperheld mit dem Turbo-Detektor „SmartWaste“ an deiner Seite! 🚀🦸‍♂️
+                    Unsere brillante Raspberry Pi-KI kann Müll wie ein Detektiv sortieren – Papier hier, Plastik dort,
+                    und den Rest wo er hingehört. Sie ist so schlau, dass sie sogar Batterien testen kann! 🔋🔍</p>
+                <p>Mit „SmartWaste“ bist du nicht nur ein Mülltrenner, sondern auch ein Umwelt-Ritter, der der Erde
+                    hilft, sich von den lästigen Abfällen zu befreien. 🌱💪 Also, pack deinen Müllhelden-Umhang aus und
+                    lass uns gemeinsam die Welt ein Stückchen sauberer machen – ein sortierter Abfall nach dem anderen!
+                    🗑️✨</p>
+            </div>
+            <div class="modal-footer">
+                <p>Version 1.0.</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         let oldText = '';
@@ -55,21 +75,63 @@
             fetch('/start')
                 .then(response => response.text())
                 .then(data => {
-                    resultElement.innerText = data;
-                    speak(data); // Call the speak function to output the result via speech
+                    const resultText = data.split(' ').slice(1).join(' ');
+
+                    // Bestimme die Farbe basierend auf dem Ergebnis
+                    let color;
+                    switch (resultText) {
+                        case 'Papier':
+                            color = 'var(--paper)';
+                            break;
+                        case 'Plastik':
+                            color = 'var(--plastic)';
+                            break;
+                        case 'Restmüll':
+                            color = 'var(--rest)';
+                            break;
+                        default:
+                            color = 'initial';
+                    }
+
+                    resultElement.innerText = resultText;
+                    resultElement.style.color = color;
+
+                    speak(resultText);
 
                     setTimeout(() => {
                         resultElement.innerText = oldText;
-                    }, 5000);
+                        resultElement.style.color = '';
+                    }, 6000);
                 });
         }
 
         function speak(text) {
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'de-DE'; // Set language to German
+            utterance.lang = 'de-DE';
             speechSynthesis.speak(utterance);
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const infoTitle = document.getElementById('info-title');
+            const modal = document.getElementById('info-modal');
+            const closeButton = document.getElementById('close-button');
+
+            infoTitle.addEventListener('click', function () {
+                modal.style.display = 'flex';
+            });
+
+            closeButton.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function (event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
     </script>
+
 
 </body>
 

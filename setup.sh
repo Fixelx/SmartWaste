@@ -316,58 +316,6 @@ WantedBy=multi-user.target
 }
 
 
-# Audiotreiber installieren
-{
-    git clone https://github.com/waveshare/WM8960-Audio-HAT
-    cd WM8960-Audio-HAT || { print_error "Verzeichniswechsel fehlgeschlagen"; exit 1; }
-
-    if sudo ./install.sh; then
-        print_success "Audiotreiber erfolgreich installiert"
-    else
-        print_error "Fehler bei der Installation des Audiotreibers"
-        exit 1
-    fi
-
-    # Überprüfen, ob der Treiber geladen ist
-    if lsmod | grep -q wm8960; then
-        print_success "Treiber ist geladen"
-    else
-        print_error "Treiber ist nicht geladen"
-        exit 1
-    fi
-} || {
-    print_error "Der Audiotreiber konnte nicht installiert werden"
-    exit 1
-}
-
-#L2C aktivieren
-{
-# Erstellen einer temporären Konfigurationsdatei für raspi-config
-    CONFIG_SCRIPT=$(mktemp /tmp/raspi-config-run.sh)
-
-    # Schreiben der automatisierten raspi-config Optionen in die temporäre Datei
-    cat <<'EOF' > "$CONFIG_SCRIPT"
-# Raspi-config Automatisierung
-raspi-config nonint do_i2c 0
-EOF
-
-    # Ausführen der Konfigurationsdatei
-    if sudo bash "$CONFIG_SCRIPT"; then
-        print_success "I2C wurde aktiviert"
-    else
-        print_error "raspi-config konnte nicht ausgeführt werden"
-        rm "$CONFIG_SCRIPT"
-        exit 1
-    fi
-
-    # Löschen der temporären Konfigurationsdatei
-    rm "$CONFIG_SCRIPT"
-} || {
-    print_error "Konfigurationsskript konnte nicht erstellt/geladen werden"
-    exit 1
-}
-
-
 #Gunicorn starten
 { # try
     sudo systemctl daemon-reload

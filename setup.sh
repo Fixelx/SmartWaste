@@ -135,6 +135,17 @@ fi
     exit 1
 }
 
+
+#libcamera installieren
+{
+    sudo apt install -y python3-libcamera && sudo apt install -y libcap-dev
+    print_success "libcamera wurde erfolgreich installiert"
+} || {
+    print_error "libcamera konnte nicht installiert werden"
+    exit 1
+}
+
+
 # Funktion zur Installation von Paketen und Protokollierung des Ergebnisses
 install_packages() {
     local packages=("wheel" "numpy" "flask" "gunicorn" "gpiozero" "RPi.GPIO" "picamera2" "opencv-python" "cvzone" "tensorflow==2.13.0" "tflite-runtime" "adafruit-circuitpython-ads1x15" "adafruit-blinka" "Adafruit_ADS1x15")
@@ -199,16 +210,6 @@ fi
     print_success "Berechtigungen erfolgreich angepasst"
 } || { # catch
     print_error "Die Berechtigungen konnten nicht korrekt gesetzt werden"
-    exit 1
-}
-
-
-#libcamera installieren
-{
-    sudo apt install -y python3-libcamera && sudo apt install -y python3-libcamera-dev
-    print_success "libcamera wurde erfolgreich installiert"
-} || {
-    print_error "libcamera konnte nicht installiert werden"
     exit 1
 }
 

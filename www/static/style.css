@@ -11,7 +11,7 @@
     --rest: #000000;
     color: var(--secondary_color);
     font-weight: 300;
-    font-size: 18px;
+    font-size: 22px;
 }
 
 body {
@@ -19,6 +19,7 @@ body {
     margin: 0;
     font-family: "Comic Sans MS", Arial, "Helvetica Neue", Helvetica, sans-serif;
     overflow: hidden;
+    transition: background-color 1s ease;
 }
 
 main {
@@ -35,8 +36,8 @@ main .gif {
 
 main .ergebnis {
     position: absolute;
-    right: 30px;
-    top: 140px;
+    right: 50px;
+    top: 150px;
 }
 
 main .ergebnis p {
@@ -44,7 +45,7 @@ main .ergebnis p {
     height: 40px;
     margin-left: 60px;
     margin-top: 15px;
-    transition: color 0.3s ease;
+    transition: opacity 0.5s ease;
 }
 
 main .menu {
@@ -242,7 +243,7 @@ footer {
 
 .modal-content h2 {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 24px;
     margin: 0;
 }
 

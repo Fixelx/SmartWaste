@@ -299,7 +299,7 @@ User=smartwaste
 Group=smartwaste_dev
 
 WorkingDirectory=$abs_path
-ExecStart=$abs_path/smartwaste-env/bin/gunicorn --workers 3 --bind $current_ip:8000 --access-logfile $abs_path/log/gunicorn/access.log --error-logfile $abs_path/log/gunicorn/error.log wsgi:app
+ExecStart=$abs_path/smartwaste-env/bin/gunicorn --workers 3 --bind $current_ip:8000 wsgi:app
 
 # Restart policies
 Restart=always

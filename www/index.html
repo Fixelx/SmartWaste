@@ -50,13 +50,17 @@
                 <span id="close-button" class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <p>Stell dir vor, du bist ein Müllsuperheld mit dem Turbo-Detektor „SmartWaste“ an deiner Seite! 🚀🦸‍♂️
+                <p>Stell dir vor, du bist ein Müllsuperheld mit dem Turbo-Detektor „SmartWaste“ an deiner Seite!
+                    &#x1F680;&#x1F9B8;&#x200D;&#x2642;&#xFE0F;
                     Unsere brillante Raspberry Pi-KI kann Müll wie ein Detektiv sortieren - Papier hier, Plastik dort,
-                    und den Rest wo er hingehört. Sie ist so schlau, dass sie sogar Batterien testen kann! 🔋🔍</p>
+                    und den Rest wo er hingehört. Sie ist so schlau, dass sie sogar Batterien testen kann!
+                    &#x1F50B;&#x1F50D;</p>
                 <p>Mit „SmartWaste“ bist du nicht nur ein Mülltrenner, sondern auch ein Umwelt-Ritter, der der Erde
-                    hilft, sich von den lästigen Abfällen zu befreien. 🌱💪 Also, pack deinen Müllhelden-Umhang aus und
+                    hilft, sich von den lästigen Abfällen zu befreien. &#x1F331;&#x1F4AA; Also, pack deinen
+                    Müllhelden-Umhang aus und
                     lass uns gemeinsam die Welt ein Stückchen sauberer machen - ein sortierter Abfall nach dem anderen!
-                    🗑️✨</p>
+                    &#x1F5D1;&#xFE0F;&#x2728;</p>
+
             </div>
             <div class="modal-footer">
                 <p>Version 1.0.</p>
@@ -65,12 +69,8 @@
     </div>
 
     <script>
-        let oldText = '';
-
         function startAnalyse() {
             const resultElement = document.getElementById('ergebnis');
-
-            oldText = resultElement.innerText;
 
             fetch('/start')
                 .then(response => response.text())
@@ -99,9 +99,9 @@
                     speak(resultText);
 
                     setTimeout(() => {
-                        resultElement.innerText = oldText;
+                        resultElement.innerText = 'Ich nehme deinen Müll gerne :)';
                         document.body.style.backgroundColor = '';
-                    }, 6000);
+                    }, 3000);
                 });
         }
 

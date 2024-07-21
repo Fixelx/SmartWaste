@@ -19,7 +19,7 @@ body {
     margin: 0;
     font-family: "Comic Sans MS", Arial, "Helvetica Neue", Helvetica, sans-serif;
     overflow: hidden;
-    transition: background-color 1s ease;
+    transition: background-color 0.5s ease;
 }
 
 main {

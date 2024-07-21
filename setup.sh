@@ -139,6 +139,7 @@ fi
 #libcamera installieren
 {
     sudo apt install -y python3-libcamera && sudo apt install -y libcap-dev
+    sudo ln -s /usr/lib/python3/dist-packages/libcamera "$abs_path/smartwaste-env/lib/python3.11/site-packages/libcamera"
     print_success "libcamera wurde erfolgreich installiert"
 } || {
     print_error "libcamera konnte nicht installiert werden"

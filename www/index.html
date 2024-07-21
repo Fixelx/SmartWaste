@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartWaste Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"><!--{{ url_for('static', filename='style.css') }}-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 
     <main>
         <div onclick="startAnalyse()">
-            <img class="gif" src="{{ url_for('static', filename='img/animation.gif') }}" alt=""><!--{{ url_for('static', filename='img/animation.gif') }}-->
+            <img class="gif" src="{{ url_for('static', filename='img/animation.gif') }}" alt="">
             <div class="ergebnis">
                 <svg style="position: absolute; height: 50px;" version="1.0" xmlns="http://www.w3.org/2000/svg"
                     width="41.000000pt" height="32.000000pt" viewBox="0 0 41.000000 32.000000"
@@ -29,41 +29,48 @@
             </div>
         </div>
         <div class="menu">
-            <div class="menu-ctn" onclick="window.location.href={{ url_for('static', filename='battery.html') }}"><!--{{ url_for('static', filename='ibattery.html') }}-->
-                <img src="{{ url_for('static', filename='img/battery.png') }" alt=""><!--{{ url_for('static', filename='img/battery.png') }}-->
+            <div class="menu-ctn" onclick="window.location.href='{{ url_for('battery') }}'">
+                <img src="{{ url_for('static', filename='img/battery.png') }}" alt="">
             </div>
-        </div>
+        </div>    
     </main>
 
     <footer>
         <div class="footer-logo">
-            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="CC Logo"><!--{{ url_for('static', filename='img/logo.svg') }}-->
+            <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="CC Logo">
         </div>
         <div class="footer-info">
             <h1>Informationen</h1>
         </div>
     </footer>
+
+    <script>
+        let oldText = '';
+
+        function startAnalyse() {
+            const resultElement = document.getElementById('ergebnis');
+
+            oldText = resultElement.innerText;
+
+            fetch('/start')
+                .then(response => response.text())
+                .then(data => {
+                    resultElement.innerText = data;
+                    speak(data); // Call the speak function to output the result via speech
+
+                    setTimeout(() => {
+                        resultElement.innerText = oldText;
+                    }, 5000);
+                });
+        }
+
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'de-DE'; // Set language to German
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+
 </body>
-
-<script>
-    let oldText = '';
-
-    function startAnalyse() {
-        const resultElement = document.getElementById('ergebnis');
-
-        oldText = resultElement.innerText;
-
-        fetch('/start')
-            .then(response => response.text())
-            .then(data => {
-                resultElement.innerText = data;
-
-                setTimeout(() => {
-                    resultElement.innerText = oldText;
-                }, 5000);
-            });
-    }
-
-</script>
 
 </html>

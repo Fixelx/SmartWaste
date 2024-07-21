@@ -1,27 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from module.picture import *
 from module.analyse import *
 from module.battery import *
 import RPi.GPIO as GPIO
 
-app = Flask(__name__, template_folder='www/', static_folder='www/static')
-
-LED_PIN = 17
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(LED_PIN, GPIO.OUT)
+app = Flask(__name__, template_folder='www', static_folder='www/static')
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/led/<action>')
-def led_action(action):
-    if action == 'on':
-        GPIO.output(LED_PIN, GPIO.HIGH)
-    elif action == 'off':
-        GPIO.output(LED_PIN, GPIO.LOW)
-    return 'LED ' + action
 
 @app.route('/start')
 def start():
@@ -34,8 +21,12 @@ def start():
 
 @app.route('/battery')
 def battery():
-    battery1, battery2, battery3, battery4 = getBatteryStat()
-    return render_template('battery.html', battery1=battery1, battery2=battery2, battery3=battery3, battery4=battery4)
+    return render_template('battery.html')
+
+@app.route('/battery_status')
+def battery_status():
+    data = get_battery_status()
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run()

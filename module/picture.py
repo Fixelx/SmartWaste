@@ -14,7 +14,6 @@ def take():
         
         # Direktes Bild aufnehmen
         picam2.capture_file(name)
-        print(f"Bild gespeichert: {name}")
 
     finally:
         picam2.stop()

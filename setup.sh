@@ -129,6 +129,7 @@ fi
     sudo python -m venv --system-site-packages "$abs_path/smartwaste-env"
     source "$abs_path/smartwaste-env/bin/activate"
     print_success "Virtual-Environment wurde erstellt"
+    print_info "$abs_path/smartwaste-env/bin/activate"
 } || { # catch
     print_error "Die Python Environment konnte nicht erstellt werden"
     exit 1
@@ -191,13 +192,9 @@ fi
 
 # Berechtigungen anpassen
 { # try
-    if grep -q "^smartwaste_dev:" /etc/group; then
-        print_info "Die Gruppe 'smartwaste_dev' existiert bereits."
-    else
-        sudo groupadd smartwaste_dev
-    fi
+    sudo adduser --system --no-create-home --ingroup smartwaste_dev smartwaste
     sudo chmod -R 774 "$directory_name"
-    sudo chown -R root:smartwaste_dev "$directory_name"
+    sudo chown -R smartwaste:smartwaste_dev "$directory_name"
     sudo usermod -aG smartwaste_dev $USER
     print_success "Berechtigungen erfolgreich angepasst"
 } || { # catch
@@ -296,8 +293,8 @@ Description=gunicorn daemon for SmartWaste
 After=network.target
 
 [Service]
-User=www-data
-Group=www-data
+User=smartwaste
+Group=smartwaste_dev
 
 WorkingDirectory=$abs_path
 ExecStart=/home/Felix/smartwaste/smartwaste-env/bin/gunicorn --workers 3 --bind $current_ip:8000 --access-logfile /home/Felix/smartwaste/log/gunicorn/access.log --error-logfile /home/Felix/smartwaste/log/gunicorn/error.log app:app

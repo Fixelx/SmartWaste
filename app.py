@@ -26,6 +26,7 @@ def battery():
 @app.route('/battery_status')
 def battery_status():
     data = get_battery_status()
+    print(data)
     return jsonify(data)
 
 if __name__ == '__main__':

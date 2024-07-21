@@ -6,12 +6,12 @@
     --third_color_trans: #0e111766;
     --cc_color: #009ddc;
 
-    --paper: blue;
-    --platic: green;
-    --rest: black;
+    --paper: #174385;
+    --platic: #0c6129;
+    --rest: #000000;
     color: var(--secondary_color);
     font-weight: 300;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 body {
@@ -35,8 +35,8 @@ main .gif {
 
 main .ergebnis {
     position: absolute;
-    right: 10px;
-    top: 110px;
+    right: 30px;
+    top: 140px;
 }
 
 main .ergebnis p {
@@ -44,7 +44,6 @@ main .ergebnis p {
     height: 40px;
     margin-left: 60px;
     margin-top: 15px;
-    font-size: 15px;
     transition: color 0.3s ease;
 }
 
@@ -106,14 +105,13 @@ footer {
 }
 
 .footer-logo img {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
 }
 
 .footer-info h1 {
     padding: 3px 0;
     margin: 0;
-    font-size: 18px;
 }
 
 
@@ -128,7 +126,7 @@ footer {
 .batterie-status {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 35px;
     flex-direction: column;
     margin-left: 15vw;
 }
@@ -139,7 +137,7 @@ footer {
 }
 
 .batterie-status-bar {
-    height: 24px;
+    height: 30px;
     background-color: var(--secondary_color);
     border-radius: 0 10px 10px 0;
     display: flex;
@@ -150,7 +148,7 @@ footer {
 
 .batterie-status-label {
     width: 20%;
-    height: 24px;
+    height: 30px;
     background: var(--cc_color);
     display: flex;
     align-items: center;
@@ -244,7 +242,7 @@ footer {
 
 .modal-content h2 {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 20px;
     margin: 0;
 }
 

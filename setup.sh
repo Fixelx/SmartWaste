@@ -297,9 +297,11 @@ After=network.target
 [Service]
 User=smartwaste
 Group=smartwaste_dev
-WorkingDirectory=$abs_path
-ExecStart=$abs_path/smartwaste-env/bin/gunicorn --workers 3 --bind unix:/$abs_path/smartwaste.sock wsgi:app
 
+WorkingDirectory=$abs_path
+ExecStart=$abs_path/smartwaste-env/bin/gunicorn --workers 3 --bind $current_ip:8000 --access-logfile $abs_path/log/gunicorn/access.log --error-logfile $abs_path/log/gunicorn/error.log wsgi:app
+
+# Restart policies
 Restart=always
 RestartSec=3
 

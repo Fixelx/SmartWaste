@@ -11,7 +11,7 @@
     --rest: black;
     color: var(--secondary_color);
     font-weight: 300;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 body {
@@ -113,6 +113,7 @@ footer {
 .footer-info h1 {
     padding: 3px 0;
     margin: 0;
+    font-size: 18px;
 }
 
 
@@ -127,7 +128,7 @@ footer {
 .batterie-status {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 25px;
     flex-direction: column;
     margin-left: 15vw;
 }
@@ -140,7 +141,7 @@ footer {
 .batterie-status-bar {
     height: 24px;
     background-color: var(--secondary_color);
-    border-radius: 10px 0 0 10px;
+    border-radius: 0 10px 10px 0;
     display: flex;
     align-items: center;
     gap: 20px;

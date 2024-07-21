@@ -2,12 +2,10 @@ import cv2
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
 
-# Lade das TFLite-Modell
 interpreter = Interpreter(model_path='module/model/model.tflite')
 interpreter.allocate_tensors()
 
 def preprocess_image(image_path, target_size):
-    # Lade das Bild und bereite es vor
     image = cv2.imread(image_path)
     if image is None:
         raise ValueError(f"Bild konnte nicht geladen werden: {image_path}")
@@ -16,7 +14,6 @@ def preprocess_image(image_path, target_size):
     return image[np.newaxis, ...]
 
 def predict_with_tflite(interpreter, image):
-    # Setze die Eingabedaten und führe die Vorhersage durch
     input_details = interpreter.get_input_details()[0]
     output_details = interpreter.get_output_details()[0]
 

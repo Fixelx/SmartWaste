@@ -1,7 +1,8 @@
 * {
     --primary_color: #3f444d;
     --secondary_color: #dce2e8;
-    --third_color: #0e1117; /*303f85*/
+    --third_color: #0e1117;
+    /*303f85*/
     --third_color_trans: #0e111766;
     --cc_color: #009ddc;
 
@@ -123,7 +124,7 @@ footer {
 
 
 
-.batterie-status{
+.batterie-status {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -139,7 +140,7 @@ footer {
 .batterie-status-bar {
     height: 24px;
     background-color: var(--secondary_color);
-    border-radius: 10px;
+    border-radius: 10px 0 0 10px;
     display: flex;
     align-items: center;
     gap: 20px;
@@ -165,11 +166,12 @@ footer {
     padding: 0 8px;
 }
 
-.batterie-status-label > p, .batterie-status-number > p {
+.batterie-status-label>p,
+.batterie-status-number>p {
     margin: 0;
 }
 
-.batterie-status-number > p {
+.batterie-status-number>p {
     color: var(--cc_color);
     font-weight: bold;
 }
@@ -191,14 +193,14 @@ footer {
 
 
 .modal {
-    display: none; 
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;
     top: 0;
     width: 100vw;
     height: 100vh;
-    overflow: hidden; 
+    overflow: hidden;
     background-color: var(--third_color_trans);
     align-items: center;
     justify-content: center;
@@ -230,11 +232,12 @@ footer {
     margin-top: auto;
 }
 
-.modal-footer > p {
+.modal-footer>p {
     margin: 0;
 }
 
-.modal-content h2, .modal-content p {
+.modal-content h2,
+.modal-content p {
     color: var(--primary_color);
 }
 

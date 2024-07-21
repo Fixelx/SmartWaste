@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="menu">
-            <div class="menu-ctn">
+            <div class="menu-ctn" onclick="window.location.href='{{ url_for('index')}}'">
                 <img src="{{ url_for('static', filename='img/animation.gif') }}" alt="">
             </div>
         </div>
@@ -73,12 +73,7 @@
     </footer>
 
     <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            setstatus('batterie1', 80); // Beispielwerte zum Testen
-            setstatus('batterie2', 50);
-            setstatus('batterie3', 50);
-            setstatus('batterie4', 50);
-
+        function fetchBatteryStatus() {
             fetch('/battery_status')
                 .then(response => response.json())
                 .then(data => {
@@ -88,19 +83,32 @@
                     setstatus('batterie4', data.battery4.percentage);
                 })
                 .catch(error => console.error('Fehler beim Abfragen der Daten: ', error));
+        }
+    
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchBatteryStatus();
+            setInterval(fetchBatteryStatus, 20000);
         });
-
+    
         function setstatus(className, status) {
             const batterieElement = document.getElementsByClassName(className)[0];
             const numberElement = document.getElementsByClassName(className + '-number')[0];
+            
             if (batterieElement) {
-                batterieElement.style.width = `${status}%`;
+                batterieElement.style.width = (status && status !== '') ? `${status}%` : '0%';
             }
+            
             if (numberElement) {
-                numberElement.textContent = `${Math.round(status)}%`; // Rundet auf ganze Zahlen
+                if (status === null || status === undefined || status === '') {
+                    numberElement.textContent = 'Frei';
+                } else {
+                    numberElement.textContent = `${Math.round(status)}%`;
+                }
             }
         }
     </script>
+    
+    
 
 </body>
 
